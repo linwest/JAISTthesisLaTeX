@@ -1,0 +1,270 @@
+% Revised by Wensheng Lin (linwest@jaist.ac.jp) 2019-13-16
+
+\usepackage{etoolbox} %etoolbox包含\patchcmd，用于修改命令
+\setcounter{secnumdepth}{3} %章节编号深度为3，为subsubsection编号
+\usepackage{amsmath, amssymb} %数学公式宏包
+\usepackage{graphicx, epsfig, subfigure} %图片相关宏包
+\usepackage{cite} %引用文献宏包
+
+\allowdisplaybreaks[0] %公式跨页设置，取值为0-4
+
+%%%%%%%%%%%%%%%%%%%%%%修改页面布局%%%%%%%%%%%%%%%%%%%%
+\setlength{\evensidemargin}{31pt}
+\setlength{\oddsidemargin}{31pt}
+\setlength{\topmargin}{20pt}
+\setlength{\headheight}{12pt}
+\setlength{\headsep}{25pt}
+\setlength{\marginparsep}{7pt} 
+\setlength{\marginparwidth}{35pt}
+%%%%%%%%%%%%%%%%%%%%%%修改页面布局end%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%修改目录中的章节标题样式%%%%%%%
+\newcommand{\fullChapterName}{\chaptertitlename~\arabic{chapter}} %章节编号全名
+\newcommand{\ChapterNameInTitle}{\Huge \fullChapterName} %章节标题中带格式的编号全名
+
+\makeatletter
+%\chapter开始前把编号改为编号全名
+\pretocmd{\@chapter}{
+		\let\oldthechapter\thechapter
+		\protect\renewcommand{\thechapter}{\fullChapterName}		
+	}{}{}
+%\chapter结束后把编号改为数字
+\apptocmd{\@chapter}{
+		 \protect\renewcommand{\thechapter}{\oldthechapter}		
+	}{}{}
+\makeatother
+%%%%%%%%%%%%修改目录中的章节标题样式end%%%%%%%
+
+%%%%%%%%%%%%%%目录中的附录样式%%%%%%%%%%%%%%%%%%%%
+\newcommand{\appendicesname}{Appendices} %设定目录中单独一栏“附录”的名称
+
+\newif\ifFistAppd %判断是否是第一个附录的辅助标记
+\FistAppdfalse
+
+\apptocmd{\appendix}{
+		\protect
+		\renewcommand{\fullChapterName}{\chaptertitlename~\Alph{chapter}} %在目录中显示附录全名
+		\renewcommand{\ChapterNameInTitle}{\chaptertitlename~\Huge \Alph{chapter}} %修改附录标题全名
+		\FistAppdtrue %设定是否为第一个附录的值为“真”
+	}{}{}	
+
+\newcommand{\addAppdicestoToC}{  %在目录中第一个附录之前，额外增加一行“附录”链接
+		\ifFistAppd 
+			\addcontentsline{toc}{chapter}{\appendicesname} %如果是第一个附录，在目录中额外增加一行“附录”链接
+			\FistAppdfalse 
+		\fi
+	}
+	
+\makeatletter
+\patchcmd{\@chapter}{\addcontentsline}{
+		\protect 
+		\addAppdicestoToC \addcontentsline
+	}{}{}
+\makeatother
+
+%%%%%%%%%%%%%%目录中的附录样式end%%%%%%%%%%%%%%%%%
+
+\usepackage[colorlinks, linkcolor=black, anchorcolor=black, citecolor=black]{hyperref} %给交叉引用添加超链接
+
+%%%%%%%%%%%%%%%%%%%目录格式%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[subfigure]{tocloft}
+%\setlength{\cftchapnumwidth}{4em} %设置章节编号固定宽度，更新\numberline则该行无效
+\renewcommand{\numberline}[1]{#1\quad} %章节编号自动宽度
+
+\makeatletter
+
+\patchcmd{\@cftmakeloftitle}{\cftloftitlefont\listfigurename}{ %修改图片列表
+		\protect 
+		\chapter*{\cftloftitlefont\listfigurename} %为列表重新开始一章
+		\addcontentsline{toc}{chapter}{\listfigurename} %将列表加入目录
+	}{}{}
+
+\patchcmd{\@cftmakelottitle}{\cftlottitlefont\listtablename}{ %修改表格列表
+		\protect 
+		\chapter*{\cftlottitlefont\listtablename} %为列表重新开始一章
+		\addcontentsline{toc}{chapter}{\listtablename} %将列表加入目录
+	}{}{}
+
+\patchcmd{\@cftmaketoctitle}{\cfttoctitlefont\contentsname}{ %修改目录列表
+		\protect 
+		\chapter*{\cfttoctitlefont\contentsname} %为列表重新开始一章
+		\addcontentsline{toc}{chapter}{\contentsname} %将列表加入目录
+	}{}{}
+\makeatother
+
+\apptocmd{\thebibliography}{%
+  \protect \addcontentsline{toc}{chapter}{\bibname}
+}{}{} %将参考文献加入目录
+%%%%%%%%%%%%%%%%%%%目录格式end%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%修改章节标题样式%%%%%%%%%%%%%%%%%%%%
+\usepackage{titlesec}
+
+\def\basicTitleFont{} %设置标题基本字体
+\def\secTitleFont{\bf \basicTitleFont} %定义字体
+\def\secTitleFontL{\secTitleFont \Large} %定义字体
+\def\secTitleFontl{\secTitleFont \large} %定义字体
+
+\titleformat{\section}{\basicTitleFont}{\secTitleFontL \thesection}{.5em}{\secTitleFontL} %设置section样式
+\titleformat{\subsection}{\basicTitleFont}{\secTitleFontl \thesubsection}{.5em}{\secTitleFontl} %设置subsection样式
+\titleformat{\subsubsection}{\basicTitleFont}{\secTitleFont \thesubsubsection}{.5em}{\secTitleFont} %设置subsubsection样式
+
+%定义修改标题样式的命令
+\newcommand{\titleStyle}[3]{
+	\titleformat{#1}[display]
+		{#3 \basicTitleFont \bfseries\Huge}
+	{\ChapterNameInTitle}
+	{0pt}
+	{#2}
+}
+
+%设置普通的章节样式
+\newcommand{\titleStyleChapter}{
+	\titleStyle{\chapter}{\vspace{20pt} \Huge}{}
+}
+
+%设置列表的章节样式（无编号，标题左对齐）
+\newcommand{\titleStyleList}{
+	\titleStyle{\chapter}{}{}
+}
+
+%设置摘要、致谢的章节样式（无编号，标题居中）
+\newcommand{\titleStyleCenter}{
+	\titleStyle{\chapter}{\Large}{\centering}
+}
+
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}[0pt] %设置标题间距
+%%%%%%%%%%%%%%%%%%%%%%修改章节标题样式end%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%页眉页脚%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr}
+\fancypagestyle{plain}{
+	\renewcommand{\headrulewidth}{0pt}%改为0pt即可去掉页眉下面的横线
+	\renewcommand{\footrulewidth}{0pt}%改为0pt即可去掉页脚上面的横线
+	\fancyhead{}%清空页眉
+	\fancyfoot{}%清空页脚
+	\fancyfoot[CO,CE]{\thepage}%奇数页中间，偶数页中间显示页脚
+}
+
+\patchcmd{\chapter}{\cleardoublepage}{
+	\protect \pagestyle{plain} %空白页显示页码
+	\cleardoublepage 
+	}{}{}
+%%%%%%%%%%%%%%%%%%%%%页眉页脚end%%%%%%%%%%%%%%%%%%%%%%%%%%	
+
+%%%%%%%%%%%%%%%%%%%英文断词设置%%%%%%%%%%%%%%%%%%%%%%
+\hyphenpenalty=500
+\tolerance=1000
+%\hyphenation{trans-mis-sions} %单独定义断词规则
+%%%%%%%%%%%%%%%%%%%英文断词设置end%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%列表间距设置%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{enumitem}
+\setenumerate[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt} %有序列表
+\setitemize[1]{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt} %无序列表
+\setdescription{itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
+%%%%%%%%%%%%%%%%%%%列表间距设置end%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%定义学术成果列表%%%%%%%%%%%%%
+\newenvironment{publication}%
+{\newcounter{pubnum}\begin{list}%
+{[\arabic{pubnum}]}{\usecounter{pubnum}}}{\end{list}}
+%%%%%%%%%%%%%%%%%%%定义学术成果列表end%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%PDF书签设置%%%%%%%%%%%%%%%%%
+\usepackage{bookmark}
+\bookmarksetup{
+  numbered, %添加章节编号
+  open, %展开书签列表
+}
+%%%%%%%%%%%%%%%%%%%PDF书签设置end%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%术语列表%%%%%%%%%%%%%%%%%
+\usepackage[nonumberlist, toc, acronym]{glossaries}  
+\renewcommand{\glspostdescription}{} %去掉默认 description 后的句号
+\renewcommand{\glsgroupskip}{} %不用分组。默认同一字母开头的符号被归为一组，不同组之间的条目有较大空白。 
+
+\newglossary[slg]{symbols}{sym}{sbl}{\symbolname} %自定义一个 symbols 的列表类别。sbl 是将生成的文件的后缀名，可以自己定义。大标题被命名为\symbolname
+
+
+\makeglossaries %生成术语列表
+%%%%%%%%%%%%%%%%%%术语列表end%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%术语列表风格%%%%%%%%%%%%%%%%%
+\newlength{\glsnamewidth}
+\setlength{\glsnamewidth}{0.15\textwidth} %术语列表名称宽度
+\setlength{\glsdescwidth}{\dimexpr(\textwidth-\glsnamewidth-4\tabcolsep)\relax} %术语列表详细介绍宽度
+
+\renewenvironment{theglossary}%
+     {\begin{longtable}{p{\glsnamewidth}p{\glsdescwidth}}}
+     %
+     {\end{longtable}}%
+\renewcommand{\glossaryheader}{}%
+\renewcommand{\glsgroupheading}[1]{}%
+\renewcommand{\glossarysubentryfield}[6]{%
+     & \glstarget{##2}{\strut}##4\glspostdescription\space ##6\\}%
+     
+\newglossarystyle{clongUC}{ %自定义一个首字母大写的列表风格
+	\renewcommand{\glossaryentryfield}[5]{%
+    \glstarget{##1}{##2} & \makefirstuc{##3} \glspostdescription \space ##5\\}%  
+}
+
+\newglossarystyle{clong}{ %自定义一个普通列表风格
+  \renewcommand{\glossaryentryfield}[5]{%
+    \glstarget{##1}{##2} & ##3  \glspostdescription \space ##5\\}%
+}
+
+\glossarystyle{clongUC} % 设置列表风格
+%%%%%%%%%%%%%%%%%%术语列表风格end%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%算法样式设置%%%%%%%%%%%%%%%%%
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\newcommand{\algorithmname}{Algorithm} %设置算法标题名称
+\makeatletter 
+\renewcommand{\ALG@name}{\algorithmname} 
+\makeatother
+
+\renewcommand{\algorithmicrequire}{\textbf{\quad Input:}} %设置输入名称
+\renewcommand{\algorithmicensure}{\textbf{\quad Output:}} %设置输出名称
+\renewcommand{\thealgorithm}{\arabic{chapter}.\arabic{algorithm}} %设置算法编号格式
+
+\makeatletter
+\@addtoreset{algorithm}{chapter} %每章重置算法编号
+\makeatother
+%%%%%%%%%%%%%%%%%%算法样式设置end%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%颜色定义%%%%%%%%%%%%%%%%%%%%
+\usepackage[dvipsnames]{xcolor}
+%%%%%%%%%%%%%%%%%%%%%颜色定义end%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%代码样式设置%%%%%%%%%%%%%%%%
+\usepackage{listings}
+\lstset{ %设置代码格式
+    language=C++, %默认语言
+    basicstyle=\footnotesize,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=2, %Tab符号的长度
+    breaklines=true,
+    breakatwhitespace=false,
+    frame=single, %边框
+    backgroundcolor=\color{gray!15}, %背景颜色
+}
+\renewcommand{\lstlistingname}{Code}
+%%%%%%%%%%%%%%代码样式设置end%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%自定义引用命令%%%%%%%%%%%%%%
+\newcommand{\fref}[1]{\figurename~\ref{#1}} %引用图片
+\newcommand{\tref}[1]{\tablename~\ref{#1}} %引用表格
+\newcommand{\eqsref}[2]{(\ref{#1} -- \ref{#2})} %连续引用公式
+\newcommand{\algref}[1]{\algorithmname~\ref{#1}} %引用算法
+\newcommand{\coderef}[1]{\lstlistingname~\ref{#1}} %引用代码
+%%%%%%%%%%%%%%%%自定义引用命令end%%%%%%%%%%%
+

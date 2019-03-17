@@ -1,0 +1,66 @@
+\documentclass[12pt,a4paper,openright]{book}
+
+\usepackage{ThesisStyle} %样式模板
+
+%\usepackage{showframe} %显示文档框架，用于检查内容是否超出页面布局
+
+\input{Abbreviations} %定义缩略语
+\input{Symbols} %定义符号
+
+\begin{document}
+
+\include{TitlePage} %封面
+
+\pagenumbering{Roman} %页码使用大写罗马数字
+\titleStyleCenter
+
+%%%%%%%%%%%%%%%%摘要和致谢%%%%%%%%%%%%%%%%%%%%%%%
+\include{Chapters/Abstract}
+\include{Chapters/Acknowledgment}
+%%%%%%%%%%%%%%%%摘要和致谢end%%%%%%%%%%%%%%%%%%%%
+
+\titleStyleList
+
+%%%%%%%%%%%%%%%%图片、表格、术语列表%%%%%%%%%%%%%%%
+\renewcommand{\acronymname}{List of Abbreviations} %设置缩写列表名称
+\renewcommand{\symbolname}{List of Symbols} %设置符号列表名称
+
+\printglossary[type=\acronymtype] %插入缩略语列表
+\setglossarystyle{clong} %设置列表风格,首字母不大写
+\printglossary[type=symbols] %插入符号列表
+\glsresetall %重置术语列表的引用
+
+\listoffigures %插入图片列表
+\listoftables %插入表格列表
+\tableofcontents %插入目录
+%%%%%%%%%%%%%%%%图片、表格、术语列表end%%%%%%%%%%%%
+
+\cleardoublepage
+\pagenumbering{arabic} %正文页码使用阿拉伯数字
+\setcounter{page}{1} %正文页码从1开始
+
+%%%%%%%%%%%%%%%%%正文章节%%%%%%%%%%%%%%%%%%%%%%%%
+\titleStyleChapter
+\include{Chapters/Introduction}
+\include{Chapters/Conclusion}
+%%%%%%%%%%%%%%%%%正文章节end%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+%\FistAppdfalse %注释掉\FistAppdfalse，则会在目录中第一个附录之前，额外增加一行“附录”链接
+%%%%%%%%%%%%%%%%附录%%%%%%%%%%%%%%%%%%%
+\include{Appendices/AppendixExample}
+\include{Appendices/AppendixCode}
+%%%%%%%%%%%%%%%%附录end%%%%%%%%%%%%%%%%%%%
+\titleStyleList
+
+
+%%%%%%%%%%%%%%%%参考文献%%%%%%%%%%%%%%%%%%%
+\renewcommand{\bibname}{References} %设置参考文献标题
+\bibliographystyle{IEEEtran} %参考文献样式
+\bibliography{myReference} %参考文献bib文件
+%%%%%%%%%%%%%%%%参考文献end%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%学术成果end%%%%%%%%%%%%%%%%%%%%
+\include{Chapters/Publications}
+%%%%%%%%%%%%%%%%%学术成果end%%%%%%%%%%%%%%%%%%%%
+\end{document}
