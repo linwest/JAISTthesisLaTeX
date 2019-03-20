@@ -45,7 +45,7 @@
 \section{表}
 \begin{table}[ht]
 \centering
-\begin{tabular}{r|rr}
+\begin{tabular}{m{1cm}|rr}
 & a & b\\ 
 \hline
 1& 0.25 & 0.33\\
@@ -143,3 +143,17 @@ int main(){
 	{Chapters/Conclusion.tex} %从文件中插入代码
 
 \coderef{code:input}
+
+\subsection{\DefinitionName、\LemmaName と\PropositionName}
+
+\Definition\label{def:example} 例の\DefinitionName
+
+\Lemma\label{lem:example} 例の\LemmaName
+
+\Proposition\label{pro:example} 例の\PropositionName
+
+\ref{def:example}
+
+\ref{lem:example}
+
+\ref{pro:example}

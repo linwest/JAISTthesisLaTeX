@@ -19,19 +19,10 @@
 %%%%%%%%%%%%%%%%%%%%%%修改页面布局end%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%修改目录中的章节标题样式%%%%%%%
-\newcommand{\fullChapterName}{\chaptertitlename~\arabic{chapter}} %章节编号全名
-\newcommand{\ChapterNameInTitle}{\Huge \fullChapterName} %章节标题中带格式的编号全名
-
 \makeatletter
-%\chapter开始前把编号改为编号全名
-\pretocmd{\@chapter}{
-		\let\oldthechapter\thechapter
-		\protect\renewcommand{\thechapter}{\fullChapterName}		
-	}{}{}
-%\chapter结束后把编号改为数字
-\apptocmd{\@chapter}{
-		 \protect\renewcommand{\thechapter}{\oldthechapter}		
-	}{}{}
+\patchcmd{\@chapter}{\numberline {\thechapter }}{
+		\protect \numberline {\chaptertitlename~\thechapter} %将章节名称加入目录
+	}{}
 \makeatother
 %%%%%%%%%%%%修改目录中的章节标题样式end%%%%%%%
 
@@ -43,8 +34,6 @@
 
 \apptocmd{\appendix}{
 		\protect
-		\renewcommand{\fullChapterName}{\chaptertitlename~\Alph{chapter}} %在目录中显示附录全名
-		\renewcommand{\ChapterNameInTitle}{\chaptertitlename~\Huge \Alph{chapter}} %修改附录标题全名
 		\FistAppdtrue %设定是否为第一个附录的值为“真”
 	}{}{}	
 
@@ -113,7 +102,7 @@
 \newcommand{\titleStyle}[3]{
 	\titleformat{#1}[display]
 		{#3 \basicTitleFont \bfseries\Huge}
-	{\ChapterNameInTitle}
+	{\chaptertitlename~\thechapter}
 	{0pt}
 	{#2}
 }
@@ -261,6 +250,9 @@
 
 
 %%%%%%%%%%%%%%%%自定义引用命令%%%%%%%%%%%%%%
+\newcommand{\charef}[1]{\chaptername~\ref{#1}} %引用章
+\newcommand{\appref}[1]{\appendixname~\ref{#1}} %引用附录
+\newcommand{\secref}[1]{\ref{#1}} %引用节
 \newcommand{\fref}[1]{\figurename~\ref{#1}} %引用图片
 \newcommand{\tref}[1]{\tablename~\ref{#1}} %引用表格
 \newcommand{\eqsref}[2]{(\ref{#1} -- \ref{#2})} %连续引用公式
@@ -268,3 +260,26 @@
 \newcommand{\coderef}[1]{\lstlistingname~\ref{#1}} %引用代码
 %%%%%%%%%%%%%%%%自定义引用命令end%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%定义自动编号的Proposition%%%%%%%%%%%%%%
+\newcommand{\PropositionName}{Proposition}
+\newcounter{proposition}[chapter]
+\renewcommand{\theproposition}{\PropositionName~\thechapter.\arabic{proposition}}
+\def\Proposition{\refstepcounter{proposition}\textbf{\theproposition:}~}
+%%%%%%%%%%%%%%%定义自动编号的Proposition end%%%%%%%%%%
+
+%%%%%%%%%%%%%%%定义自动编号的Definition%%%%%%%%%%%%%%
+\newcommand{\DefinitionName}{Definition}
+\newcounter{definition}[chapter]
+\renewcommand{\thedefinition}{\DefinitionName~\thechapter.\arabic{definition}}
+\def\Definition{\refstepcounter{definition}\textbf{\thedefinition:}~}
+%%%%%%%%%%%%%%%定义自动编号的Definition end%%%%%%%%%%
+
+%%%%%%%%%%%%%%%定义自动编号的Lemma%%%%%%%%%%%%%%%%%%%
+\newcommand{\LemmaName}{Lemma}
+\newcounter{lemma}[chapter]
+\renewcommand{\thelemma}{\LemmaName~\thechapter.\arabic{lemma}}
+\def\Lemma{\refstepcounter{lemma}\textbf{\thelemma:}~}
+%%%%%%%%%%%%%%%定义自动编号的Lemma end%%%%%%%%%%%%%%%
+
+\usepackage{array}

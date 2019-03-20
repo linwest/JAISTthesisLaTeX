@@ -1,13 +1,17 @@
 \chapter{Introduction}
 
-\section{Section}
-\subsection{Subsection}
+\section{Section}\label{sec:example}
+\subsection{Subsection}\label{sec:example2}
 \subsubsection{Subsubsection}
 
 
-\ref{cha:conclusion}
+\charef{cha:conclusion}
 
-\ref{app:example}
+\appref{app:example}
+
+\secref{sec:example}
+
+\secref{sec:example2}
 
 \section{Figures}
 
@@ -41,7 +45,7 @@
 \section{Tables}
 \begin{table}[ht]
 \centering
-\begin{tabular}{r|rr}
+\begin{tabular}{m{1cm}|rr}
 & a & b\\ 
 \hline
 1& 0.25 & 0.33\\
@@ -139,3 +143,17 @@ int main(){
 	{Chapters/Conclusion.tex} %从文件中插入代码
 
 \coderef{code:input}
+
+\subsection{Definition, Lemma, and Proposition}
+
+\Definition\label{def:example} Example Definition
+
+\Lemma\label{lem:example} Example Lemma
+
+\Proposition\label{pro:example} Example Proposition
+
+\ref{def:example}
+
+\ref{lem:example}
+
+\ref{pro:example}
