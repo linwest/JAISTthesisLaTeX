@@ -3,9 +3,7 @@ JAIST Thesis LaTeX template
 
 # ############################################
 This project is revised from official thesis template. Since it is relatively simple, 
-
 this project divides the template into many files, and adds some functions, such as 
-
 appendices, glossaries, algorithms, and codes.
 
 # ############################################
@@ -18,7 +16,6 @@ appendices, glossaries, algorithms, and codes.
 • 第三个，就是我们知道的一些常用功能，也被加进了这个模板中。
 
 如果说还有一点什么成绩，就是再附加了一份教程。但这些都是次要的，这个模板主要的改动就是三件事情，
-
 很惭愧，就做了一点微小的工作，谢谢大家。
 
 # ############################################
