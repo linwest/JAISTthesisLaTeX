@@ -19,9 +19,18 @@ appendices, glossaries, algorithms, and codes.
 很惭愧，就做了一点微小的工作，谢谢大家。
 
 # ############################################
+V1.01
+
+Fixed the following two bugs.
+
+(1) If the previous chapter has even number of pages, extra two more blank pages will be inserted before table of contents.
+
+(2) In Japanese template, if the previous chapter has odd number of pages, Acknowledgment will start from even page.
+
+# ############################################
 V1.0
 
-Revised some bugs. Added new commands and a document of the template.
+Fixed some bugs. Added new commands and a document of the template.
 
 # ############################################
 V0.9

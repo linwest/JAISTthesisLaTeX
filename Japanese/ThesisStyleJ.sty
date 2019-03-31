@@ -80,12 +80,20 @@
 		\chapter*{\cftlottitlefont\listtablename} %为列表重新开始一章
 		\addcontentsline{toc}{chapter}{\listtablename} %将列表加入目录
 	}{}{}
-
-\patchcmd{\@cftmaketoctitle}{\cfttoctitlefont\contentsname}{ %修改目录列表
-		\protect 
+	
+\renewcommand{\@cftmaketoctitle}{
+\addpenalty \@secpenalty \@cftpagestyle 
+	{\interlinepenalty \@M {
 		\chapter*{\cfttoctitlefont\contentsname} %为列表重新开始一章
 		\addcontentsline{toc}{chapter}{\contentsname} %将列表加入目录
-	}{}{}
+		}{\cftaftertoctitle }\cftmarktoc \par \nobreak \vskip \cftaftertoctitleskip \@afterheading }
+
+	}
+% \patchcmd{\@cftmaketoctitle}{\cfttoctitlefont\contentsname}{ %修改目录列表
+% 		\protect 
+% 		\chapter*{\cfttoctitlefont\contentsname} %为列表重新开始一章
+% 		\addcontentsline{toc}{chapter}{\contentsname} %将列表加入目录
+% 	}{}{}
 \makeatother
 	
 \apptocmd{\thebibliography}{%
